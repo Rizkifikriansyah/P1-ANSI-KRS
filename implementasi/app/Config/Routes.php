@@ -5,4 +5,10 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
-$routes->get('/', 'Home::index');
+
+ $routes->get('/', 'Mahasiswa::dashboard'); // default ke dashboard
+ $routes->get('dashboard', 'Mahasiswa::dashboard');
+ 
+
+
+
