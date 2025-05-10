@@ -14,7 +14,7 @@
         <div class="navbar-nav">
           <a class="nav-link active" aria-current="page" href="/pages/index">Home</a>
           <a class="nav-link" href="/krs/index">KRS</a>
-          <a class="nav-link" href="/pages/laporan">Laporan</a>
+          <a class="nav-link" href="/laporan/index">Laporan</a>
         </div>
       </div>
     </div>

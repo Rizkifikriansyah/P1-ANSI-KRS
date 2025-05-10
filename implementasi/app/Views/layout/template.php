@@ -9,7 +9,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.rtl.min.css" integrity="sha384-q8+l9TmX3RaSz3HKGBmqP2u5MkgeN7HrfOJBLcTgZsQsbrx8WqqxdA5PuwUV9WIx" crossorigin="anonymous">
 
 <!-- my css -->
- <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/style.css">
+
 
     <title><?= $title; ?></title>
   </head>
