@@ -19,13 +19,8 @@ use CodeIgniter\Router\RouteCollection;
  $routes->get('/laporan', 'Laporan::index');
  $routes->get('/laporan/index', 'Laporan::index'); // Tambahan ini untuk laporan/index
  $routes->get('/laporan/cetak', 'Laporan::cetak');
- 
 
-
- 
- 
-
-
-
-
+ $routes->get('/supervisor', 'Supervisor::index');
+$routes->post('/supervisor/tambah_mahasiswa', 'Supervisor::tambah_mahasiswa');
+$routes->post('/supervisor/tambah_dosen', 'Supervisor::tambah_dosen');
 
