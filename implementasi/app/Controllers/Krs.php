@@ -2,102 +2,105 @@
 
 namespace App\Controllers;
 
-use \App\Models\KrsModel;
+use App\Controllers\BaseController;
+use App\Models\MataKuliahModel;
+use App\Models\KrsModel;
 
 class Krs extends BaseController
 {
-    protected $krsModel;
-
-    public function __construct()
-    {
-        $this->krsModel = new KrsModel();
-    }
-
     public function index()
     {
-        $krs = $this->krsModel->findAll();
-
-        $data = [
-            'title' => 'Daftar Mata Kuliah',
-            'krs' => $krs
-        ];
-
-        return view('krs/index', $data);
-    }
-
-    public function create()
-    {
-        $data = [
-            'title' => 'Form Data Kartu Rencana Studi',
-            'validation' => \Config\Services::validation()
-        ];
-
-        return view('krs/create', $data);
-    }
-
-    public function save()
-    {
-        // validasi input
-        if (!$this->validate([
-            'mata_kuliah' => 'required|is_unique[krs.mata_kuliah]'
-        ])) {
-            $validation = \Config\Services::validation();
-            return redirect()->to('/krs/create')->withInput()->with('validation', $validation);
+        // Pastikan hanya mahasiswa yang bisa akses
+        if (session()->get('role') !== 'mahasiswa') {
+            return redirect()->to('/login')->with('error', 'Akses ditolak.');
         }
 
-        $this->krsModel->save([
-            'mata_kuliah' => $this->request->getVar('mata_kuliah'),
-            'kelas' => $this->request->getVar('kelas'),
-            'dosen' => $this->request->getVar('dosen'),
-            'hari' => $this->request->getVar('hari'),
-            'sks' => $this->request->getVar('sks')
-        ]);
+        $matakuliahModel = new MataKuliahModel();
+        $data['matakuliah'] = $matakuliahModel->findAll();
 
-        session()->setFlashdata('pesan', 'Mata Kuliah Berhasil di Tambahkan.');
-
-        return redirect()->to('/krs');
+        return view('mahasiswa/krs', $data);
     }
 
-    public function delete($id)
+    public function store()
     {
-        $this->krsModel->delete($id);
+        $krsModel = new KrsModel();
+        $mahasiswa_id = session()->get('mahasiswa_id');
 
-        session()->setFlashdata('pesan', 'Data berhasil dihapus.');
-
-        return redirect()->to('/krs');
-    }
-
-    public function edit($id)
-    {
-        $data = [
-            'title' => 'Form Edit Mata Kuliah', // ✅ ini sudah benar sekarang
-            'validation' => \Config\Services::validation(),
-            'krs' => $this->krsModel->find($id)
-        ];
-
-        return view('krs/edit', $data);
-    }
-
-    public function update($id)
-    {
-        // validasi input saat update
-        if (!$this->validate([
-            'mata_kuliah' => 'required'
-        ])) {
-            return redirect()->to('/krs/edit/' . $id)->withInput();
+        if (!$mahasiswa_id) {
+            return redirect()->to('/login')->with('error', 'Silakan login sebagai mahasiswa terlebih dahulu.');
         }
 
-        $this->krsModel->save([
-            'id' => $id,
-            'mata_kuliah' => $this->request->getVar('mata_kuliah'),
-            'kelas' => $this->request->getVar('kelas'),
-            'dosen' => $this->request->getVar('dosen'),
-            'hari' => $this->request->getVar('hari'),
-            'sks' => $this->request->getVar('sks')
+        $matakuliah_id = $this->request->getPost('matakuliah_id');
+        $tahun_ajaran  = $this->request->getPost('tahun_ajaran');
+        $semester      = $this->request->getPost('semester');
+
+        // Validasi form
+        if (!$matakuliah_id || !$tahun_ajaran || !$semester) {
+            return redirect()->back()->with('error', 'Semua field wajib diisi.');
+        }
+
+        // Cegah KRS ganda
+        $sudahAda = $krsModel->where([
+            'mahasiswa_id' => $mahasiswa_id,
+            'matakuliah_id' => $matakuliah_id
+        ])->first();
+
+        if ($sudahAda) {
+            return redirect()->back()->with('error', 'Mata kuliah ini sudah Anda ambil.');
+        }
+
+        // Simpan data KRS
+        $krsModel->insert([
+            'mahasiswa_id'  => $mahasiswa_id,
+            'matakuliah_id' => $matakuliah_id,
+            'tahun_ajaran'  => $tahun_ajaran,
+            'semester'      => $semester,
         ]);
 
-        session()->setFlashdata('pesan', 'Data berhasil diubah.');
-
-        return redirect()->to('/krs');
+        return redirect()->to('/dashboard/mahasiswa')->with('success', 'KRS berhasil disimpan.');
     }
+    public function cetak()
+{
+    $mahasiswaId = session()->get('mahasiswa_id');
+
+    if (!$mahasiswaId) {
+        return redirect()->to('/login')->with('error', 'Silakan login terlebih dahulu.');
+    }
+
+    $krsModel = new \App\Models\KrsModel();
+    $mataKuliahModel = new \App\Models\MataKuliahModel();
+    $mahasiswaModel = new \App\Models\MahasiswaModel();
+
+    $mahasiswa = $mahasiswaModel->find($mahasiswaId);
+    $krsList = $krsModel->where('mahasiswa_id', $mahasiswaId)->findAll();
+
+    $matakuliahList = [];
+    foreach ($krsList as $entry) {
+        $mk = $mataKuliahModel->find($entry['matakuliah_id']);
+        if ($mk) {
+            $mk['tahun_ajaran'] = $entry['tahun_ajaran'];
+            $mk['semester'] = $entry['semester'];
+            $matakuliahList[] = $mk;
+        }
+    }
+
+    return view('mahasiswa/cetak_krs', [
+        'mahasiswa' => $mahasiswa,
+        'matakuliah' => $matakuliahList
+    ]);
+}
+public function hapus($id)
+{
+    $krsModel = new \App\Models\KrsModel();
+
+    $krs = $krsModel->find($id);
+
+    if (!$krs || $krs['mahasiswa_id'] != session()->get('mahasiswa_id')) {
+        return redirect()->to('/dashboard/mahasiswa')->with('error', 'Data KRS tidak ditemukan atau akses ditolak.');
+    }
+
+    $krsModel->delete($id);
+    return redirect()->to('/dashboard/mahasiswa')->with('success', 'KRS berhasil dihapus.');
+}
+
 }
