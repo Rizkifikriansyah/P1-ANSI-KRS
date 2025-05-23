@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>Isi KRS</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="<?= base_url('css/style.css?v=1.0.9') ?>">
+
 </head>
 <body>
 
