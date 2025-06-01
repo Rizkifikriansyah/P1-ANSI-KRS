@@ -60,5 +60,23 @@ $routes->get('/admin/matakuliah/hapus/(:num)', 'AdminController::hapusMatakuliah
 
 $routes->post('/admin/simpan-mahasiswa', 'AdminController::simpanMahasiswa');
 $routes->post('/admin/simpan-dosen', 'AdminController::simpanDosen');
+// Mahasiswa
+$routes->get('/dashboard/mahasiswa', 'Dashboard::mahasiswa');
+
+// Dosen
+$routes->get('/dashboard/dosen', 'Dashboard::dosen');
+$routes->post('/krs/approve', 'Krs::approve');
+
+// CRUD KRS
+$routes->get('/krs', 'Krs::index');
+$routes->post('/krs/store', 'Krs::store');
+$routes->get('/krs/hapus/(:num)', 'Krs::hapus/$1');
+
+
+
+
+
+
+
 
 

@@ -1,84 +1,107 @@
-<!-- views/dosen/dashboard.php -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Dashboard Dosen</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-gray-100 text-gray-800">
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#">Universitas Muhammadiyah Bima </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                </li>
-            </ul>
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <span class="nav-link text-white"><?= esc(session()->get('name')) ?> (Dosen)</span>
-                </li>
-                <li class="nav-item">
-                    <a href="<?= base_url('/logout') ?>" class="nav-link text-white">Logout</a>
-                </li>
-            </ul>
+<!-- Navbar -->
+<nav class="bg-blue-600 text-white shadow">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+        <div class="flex items-center space-x-3">
+            <img src="<?= base_url('image/umb.jpeg') ?>" alt="Logo Kampus" class="w-8 h-8 rounded-full">
+            <a href="/" class="text-lg font-semibold hover:text-yellow-300">Universitas Muhammadiyah Bima</a>
+        </div>
+        <div class="flex items-center space-x-4">
+            <span><?= esc(session()->get('name')) ?> (Dosen)</span>
+            <a href="<?= base_url('/logout') ?>" class="hover:underline">Logout</a>
         </div>
     </div>
 </nav>
 
-<div class="container">
-    <h3 class="mb-3">Selamat Datang, <?= esc(session()->get('name')) ?></h3>
-    <p class="mb-4">Berikut adalah daftar mata kuliah yang Anda ampu, beserta mahasiswa yang mengambilnya.</p>
+<!-- Main Content -->
+<div class="max-w-6xl mx-auto mt-8 px-4">
+    <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6 rounded">
+        <h4 class="text-xl font-bold">Halo, <?= esc(session()->get('name')) ?> (Dosen)</h4>
+    </div>
+    <p class="text-gray-600 mb-6">Berikut adalah daftar mata kuliah yang Anda ampu, beserta mahasiswa yang mengambilnya.</p>
 
-   <?php if (!empty($matakuliah)): ?>
-    <?php foreach ($matakuliah as $mk): ?>
-        <div class="card mb-4 shadow-sm">
-            <div class="card-header bg-secondary text-white">
-                <strong><?= esc($mk['nama']) ?></strong> (<?= esc($mk['kode']) ?>) - Semester: <?= esc($mk['semester']) ?> <br>
-                Kelas: <?= esc($mk['kelas']) ?> | Ruang: <?= esc($mk['ruang']) ?> <br>
-                Hari: <?= esc($mk['hari']) ?> | Jam: <?= esc($mk['waktu']) ?>
-            </div>
-
-                <div class="card-body p-0">
-                    <table class="table table-bordered mb-0">
-                        <thead class="table-light">
-                            <tr>
-                                <th style="width: 5%;">No</th>
-                                <th>Nama Mahasiswa</th>
-                                <th>NIM</th>
-                                <th>Prodi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php if (!empty($mk['mahasiswa'])): ?>
-                                <?php foreach ($mk['mahasiswa'] as $i => $mhs): ?>
-                                    <tr>
-                                        <td><?= $i + 1 ?></td>
-                                        <td><?= esc($mhs['nama']) ?></td>
-                                        <td><?= esc($mhs['nim']) ?></td>
-                                        <td><?= esc($mhs['prodi']) ?></td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            <?php else: ?>
-                                <tr>
-                                    <td colspan="4" class="text-center text-muted">Belum ada mahasiswa yang mengambil mata kuliah ini.</td>
-                                </tr>
-                            <?php endif; ?>
-                        </tbody>
-                    </table>
+    <?php if (!empty($matakuliah)): ?>
+        <?php foreach ($matakuliah as $mk): ?>
+            <div class="bg-white shadow rounded mb-8 overflow-hidden">
+                <div class="bg-blue-500 text-white px-6 py-4">
+                    <h5 class="font-bold text-lg"><?= esc($mk['nama']) ?> (<?= esc($mk['kode']) ?>)</h5>
+                    <p class="text-sm">Semester: <?= esc($mk['semester']) ?> | Kelas: <?= esc($mk['kelas']) ?> | Ruang: <?= esc($mk['ruang']) ?></p>
+                    <p class="text-sm">Hari: <?= esc($mk['hari']) ?> | Jam: <?= esc($mk['waktu']) ?></p>
                 </div>
+<!-- Form Approve Semua Mahasiswa dalam 1 Mata Kuliah -->
+<form action="<?= base_url('/krs/approve') ?>" method="post">
+    <?= csrf_field() ?>
+    <input type="hidden" name="matakuliah_id" value="<?= esc($mk['id']) ?>">
+
+    <table class="min-w-full text-sm text-left text-gray-700">
+        <thead class="bg-gray-100 text-gray-900">
+            <tr>
+                <th class="px-4 py-2 border">No</th>
+                <th class="px-4 py-2 border">Nama Mahasiswa</th>
+                <th class="px-4 py-2 border">NIM</th>
+                <th class="px-4 py-2 border">Prodi</th>
+                <th class="px-4 py-2 border text-center">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php 
+            $adaBelumDisetujui = false;
+            if (!empty($mk['mahasiswa'])): 
+                foreach ($mk['mahasiswa'] as $i => $mhs): ?>
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-4 py-2 border"><?= $i + 1 ?></td>
+                        <td class="px-4 py-2 border"><?= esc($mhs['nama']) ?></td>
+                        <td class="px-4 py-2 border"><?= esc($mhs['nim']) ?></td>
+                        <td class="px-4 py-2 border"><?= esc($mhs['prodi']) ?></td>
+                        <td class="px-4 py-2 border text-center">
+                            <?php if (!isset($mhs['is_approved']) || !$mhs['is_approved']): ?>
+                                <?php if (isset($mhs['krs_id'])): ?>
+                                    <input type="hidden" name="approve[]" value="<?= esc($mhs['krs_id']) ?>">
+                                <?php endif; ?>
+                                <?php $adaBelumDisetujui = true; ?>
+                                <span class="text-red-500 font-medium text-sm">Belum Disetujui</span>
+                            <?php else: ?>
+                                <span class="text-green-600 font-semibold text-sm">Disetujui</span>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                <?php endforeach;
+            else: ?>
+                <tr>
+                    <td colspan="5" class="px-4 py-3 text-center text-gray-500 border">
+                        Belum ada mahasiswa yang mengambil mata kuliah ini.
+                    </td>
+                </tr>
+            <?php endif; ?>
+        </tbody>
+    </table>
+
+    <?php if (!empty($mk['mahasiswa']) && $adaBelumDisetujui): ?>
+        <!-- Tombol Approve Semua -->
+        <div class="p-4 bg-gray-50 border-t flex justify-end">
+            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+                Approve Semua Mahasiswa
+            </button>
+        </div>
+    <?php endif; ?>
+</form>
+
             </div>
         <?php endforeach; ?>
     <?php else: ?>
-        <div class="alert alert-info">Belum ada mata kuliah yang Anda ampu.</div>
+        <div class="bg-blue-100 border border-blue-300 text-blue-800 px-4 py-3 rounded">
+            Belum ada mata kuliah yang Anda ampu.
+        </div>
     <?php endif; ?>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

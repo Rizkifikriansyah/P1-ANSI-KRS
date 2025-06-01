@@ -1,59 +1,70 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Cetak KRS</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
+    <title>Kartu Rencana Studi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style type="text/tailwindcss">
         @media print {
-            .no-print {
-                display: none;
-            }
+            .no-print { display: none !important; }
         }
     </style>
 </head>
-<body class="p-5">
+<body class="relative bg-white text-gray-900 font-sans p-8">
 
-<div class="container">
-    <div class="text-center mb-4">
-        <h3>Kartu Rencana Studi (KRS)</h3>
-        <h5><?= esc($mahasiswa['nama']) ?> - <?= esc($mahasiswa['nim']) ?></h5>
+    <!-- Background Logo -->
+    <div class="absolute inset-0 z-0 opacity-10 bg-center bg-no-repeat bg-contain pointer-events-none"
+         style="background-image: url('<?= base_url('image/umb.jpeg') ?>'); background-size: 400px;">
     </div>
 
-    <?php if (!empty($matakuliah)): ?>
-        <table class="table table-bordered">
-            <thead>
+    <div class="relative z-10 max-w-4xl mx-auto border border-gray-300 p-6 rounded shadow-sm bg-white">
+        <div class="text-center mb-6">
+            <h2 class="text-2xl font-bold uppercase tracking-wide">Kartu Rencana Studi</h2>
+            <p class="text-sm text-gray-600 mt-1">Universitas Muhammadiyah Bima</p>
+        </div>
+
+        <div class="mb-4 text-sm space-y-1">
+            <p><strong>Nama:</strong> <?= esc($mahasiswa['nama']) ?></p>
+            <p><strong>NIM:</strong> <?= esc($mahasiswa['nim']) ?></p>
+            <p><strong>Program Studi:</strong> <?= esc($mahasiswa['prodi'] ?? '-') ?></p>
+            <p><strong>Tahun Ajaran:</strong> <?= esc($tahun_ajaran) ?></p>
+            <p><strong>Semester:</strong> <?= ucfirst(esc($semester)) ?></p>
+        </div>
+
+        <table class="w-full border border-gray-300 text-sm mt-6">
+            <thead class="bg-gray-100 text-left">
                 <tr>
-                    <th>Kode</th>
-                    <th>Nama Mata Kuliah</th>
-                    <th>SKS</th>
-                    <th>Semester</th>
-                    <th>Tahun Ajaran</th>
+                    <th class="border px-3 py-2">No</th>
+                    <th class="border px-3 py-2">Kode</th>
+                    <th class="border px-3 py-2">Nama Mata Kuliah</th>
+                    <th class="border px-3 py-2 text-center">SKS</th>
+                    <th class="border px-3 py-2 text-center">Status</th>
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($matakuliah as $mk): ?>
-                    <tr>
-                        <td><?= esc($mk['kode']) ?></td>
-                        <td><?= esc($mk['nama']) ?></td>
-                        <td><?= esc($mk['sks']) ?></td>
-                        <td><?= esc($mk['semester']) ?></td>
-                        <td><?= esc($mk['tahun_ajaran']) ?></td>
-                    </tr>
+                <?php $no = 1; foreach ($matakuliah as $mk): ?>
+                <tr class="hover:bg-gray-50">
+                    <td class="border px-3 py-2"><?= $no++ ?></td>
+                    <td class="border px-3 py-2"><?= esc($mk['kode']) ?></td>
+                    <td class="border px-3 py-2"><?= esc($mk['nama']) ?></td>
+                    <td class="border px-3 py-2 text-center"><?= esc($mk['sks']) ?></td>
+                    <td class="border px-3 py-2 text-center">
+                        <?= $mk['is_approved'] ? '<span class="text-green-600 font-medium">Disetujui</span>' : '<span class="text-red-500 font-medium">Belum</span>' ?>
+                    </td>
+                </tr>
                 <?php endforeach; ?>
             </tbody>
         </table>
-    <?php else: ?>
-        <div class="alert alert-warning">
-            Anda belum mengisi KRS.
+
+        <div class="mt-12 text-sm text-right">
+            <p>Kota Bima, <?= date('d M Y') ?></p>
+            <p class="mt-12">______________________</p>
+            <p class="mt-1">Teguh Anshor Lorosae M.Kom</p>
         </div>
-    <?php endif; ?>
-
-    <div class="text-center mt-4 no-print">
-        <button onclick="window.print()" class="btn btn-primary">Cetak KRS</button>
-        <a href="<?= base_url('/dashboard/mahasiswa') ?>" class="btn btn-secondary">Kembali</a>
     </div>
-</div>
 
+    <script>
+        window.print();
+    </script>
 </body>
 </html>

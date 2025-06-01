@@ -9,41 +9,65 @@ use App\Models\MahasiswaModel;
 
 class Dashboard extends BaseController
 {
-    public function mahasiswa()
-    {
-        $mahasiswaId = session()->get('mahasiswa_id');
+public function mahasiswa()
+{
+    $mahasiswaId = session()->get('mahasiswa_id');
 
-        if (!$mahasiswaId) {
-            return redirect()->to('/login')->with('error', 'Silakan login sebagai mahasiswa.');
-        }
-
-        $krsModel = new KrsModel();
-        $mataKuliahModel = new MataKuliahModel();
-
-        // Ambil semua KRS untuk mahasiswa ini
-        $krs = $krsModel->where('mahasiswa_id', $mahasiswaId)->findAll();
-
-        // Ambil data matakuliah dari KRS
-        $matakuliahList = [];
-        foreach ($krs as $entry) {
-            $mk = $mataKuliahModel->find($entry['matakuliah_id']);
-            if ($mk) {
-                $mk['tahun_ajaran'] = $entry['tahun_ajaran'];
-                $mk['semester'] = $entry['semester'];
-                $mk['krs_id'] = $entry['id']; // Penting agar tombol hapus bekerja
-                $matakuliahList[] = $mk;
-            }
-        }
-
-        return view('dashboard/mahasiswa', [
-            'title' => 'Dashboard Mahasiswa',
-            'message' => 'Berikut adalah mata kuliah yang telah Anda pilih:',
-            'matakuliah' => $matakuliahList
-        ]);
+    if (!$mahasiswaId) {
+        return redirect()->to('/login')->with('error', 'Silakan login sebagai mahasiswa.');
     }
 
+    $krsModel = new KrsModel();
+    $mataKuliahModel = new MataKuliahModel();
 
-    public function dosen()
+    // Tentukan tahun ajaran dan semester saat ini
+    $tahunSekarang = date('Y') . '/' . (date('Y') + 1);
+    $semesterSekarang = 'genap'; // Ubah sesuai data di database jika dinamis
+
+    // Ambil semua KRS mahasiswa
+    $krsList = $krsModel->where('mahasiswa_id', $mahasiswaId)
+        ->orderBy('tahun_ajaran', 'DESC')
+        ->orderBy('semester', 'DESC')
+        ->findAll();
+
+    $riwayat = [];
+    $krsSekarang = [];
+
+    foreach ($krsList as $krs) {
+        $mk = $mataKuliahModel->find($krs['matakuliah_id']);
+
+        if ($mk) {
+            $mk['tahun_ajaran'] = $krs['tahun_ajaran'];
+            $mk['semester'] = $krs['semester'];
+            $mk['is_approved'] = $krs['is_approved'];
+            $mk['krs_id'] = $krs['id'];
+
+            $isSaatIni = $krs['tahun_ajaran'] === $tahunSekarang && $krs['semester'] === $semesterSekarang;
+
+            if ($isSaatIni) {
+                $krsSekarang[] = $mk;
+            } else {
+                $key = $krs['tahun_ajaran'] . ' - Semester ' . ucfirst($krs['semester']);
+                $riwayat[$key][] = $mk;
+            }
+        }
+    }
+
+    return view('dashboard/mahasiswa', [
+        'title' => 'Dashboard Mahasiswa',
+        'message' => 'Berikut adalah mata kuliah yang telah Anda pilih:',
+        'krsSekarang' => $krsSekarang,
+        'riwayat' => $riwayat,
+        'tahun_ajaran' => $tahunSekarang,
+        'semester' => $semesterSekarang,
+    ]);
+}
+
+
+
+
+
+public function dosen()
 {
     $dosenId = session()->get('dosen_id');
 
@@ -55,11 +79,9 @@ class Dashboard extends BaseController
     $krsModel   = new \App\Models\KrsModel();
     $mhsModel   = new \App\Models\MahasiswaModel();
 
-    // Ambil semua matakuliah yang diampu oleh dosen
     $mataKuliahList = $mkModel->where('dosen_id', $dosenId)->findAll();
 
     foreach ($mataKuliahList as &$mk) {
-        // Ambil semua KRS yang terkait dengan matakuliah ini
         $krsList = $krsModel->where('matakuliah_id', $mk['id'])->findAll();
 
         $mahasiswaList = [];
@@ -69,13 +91,14 @@ class Dashboard extends BaseController
             if ($mhs) {
                 $mahasiswaList[] = [
                     'nama' => $mhs['nama'],
-                    'nim'  => $mhs['nim'],
-                    'prodi'=> $mhs['prodi']
+                    'nim' => $mhs['nim'],
+                    'prodi' => $mhs['prodi'],
+                    'krs_id' => $krs['id'],
+                    'is_approved' => $krs['is_approved']
                 ];
             }
         }
 
-        // Tambahkan data mahasiswa ke array matakuliah
         $mk['mahasiswa'] = $mahasiswaList;
     }
 
@@ -83,6 +106,7 @@ class Dashboard extends BaseController
         'matakuliah' => $mataKuliahList
     ]);
 }
+
 
 
 
@@ -111,5 +135,7 @@ class Dashboard extends BaseController
 
         return redirect()->to('/dashboard/dosen')->with('success', 'Mata kuliah berhasil ditambahkan.');
     }
+
+    
     
 }

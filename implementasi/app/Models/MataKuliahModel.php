@@ -12,7 +12,7 @@ class MataKuliahModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields = ['kode', 'nama', 'sks', 'semester', 'kelas', 'ruang', 'hari', 'waktu','dosen_id'];
+    protected $allowedFields = ['kode', 'nama', 'sks', 'semester', 'tahun_ajaran', 'kelas', 'ruang', 'hari', 'waktu','dosen_id'];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;

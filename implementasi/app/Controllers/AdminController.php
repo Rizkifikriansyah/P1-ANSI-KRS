@@ -14,7 +14,6 @@ class AdminController extends BaseController
     {
         return view('dashboard/admin');
     }
-
     public function kelolaMatakuliah()
     {
         $model = new MataKuliahModel();
@@ -66,7 +65,6 @@ public function simpanDosen()
         'nip' => $this->request->getPost('nip'),
         'prodi' => $this->request->getPost('prodi')
     ]);
-
     return redirect()->to('/admin/dosen');
 }
 
@@ -138,7 +136,6 @@ public function simpanMahasiswa()
     return redirect()->to('/admin/mahasiswa')->with('success', 'Mahasiswa berhasil ditambahkan.');
 }
 
-
 public function updateMahasiswa($id)
 {
     $mahasiswaModel = new \App\Models\MahasiswaModel();
@@ -169,7 +166,6 @@ public function updateMahasiswa($id)
     return redirect()->to('/admin/mahasiswa')->with('success', 'Data mahasiswa diperbarui.');
 }
 
-
 public function hapusMahasiswa($id)
 {
     $model = new \App\Models\MahasiswaModel();
@@ -190,52 +186,55 @@ public function hapusMahasiswa($id)
         return view('admin/matakuliah/form', $data);
     }
 
-    /* ---------- SIMPAN BARU ---------- */
-   public function simpanMatakuliah()
+/* ---------- SIMPAN BARU ---------- */
+public function simpanMatakuliah()
 {
     $model = new \App\Models\MataKuliahModel();
 
     $model->save([
-        'kode'     => $this->request->getPost('kode'),
-        'nama'     => $this->request->getPost('nama'),
-        'sks'      => $this->request->getPost('sks'),
-        'semester' => $this->request->getPost('semester'),
-        'kelas'    => $this->request->getPost('kelas'),
-        'ruang'    => $this->request->getPost('ruang'),
-        'hari'     => $this->request->getPost('hari'),
-        'waktu'    => $this->request->getPost('waktu'),
-        'dosen_id' => $this->request->getPost('dosen_id'), // dari form, bukan dari session
+        'kode'         => $this->request->getPost('kode'),
+        'nama'         => $this->request->getPost('nama'),
+        'sks'          => $this->request->getPost('sks'),
+        'semester'     => $this->request->getPost('semester'),
+        'kelas'        => $this->request->getPost('kelas'),
+        'ruang'        => $this->request->getPost('ruang'),
+        'hari'         => $this->request->getPost('hari'),
+        'waktu'        => $this->request->getPost('waktu'),
+        'dosen_id'     => $this->request->getPost('dosen_id'),
+        'tahun_ajaran' => $this->request->getPost('tahun_ajaran'), // Tambahan
     ]);
 
     return redirect()->to('/admin/matakuliah')->with('success', 'Mata kuliah berhasil ditambahkan.');
 }
 
-    /* ---------- UPDATE ---------- */
-    public function updateMatakuliah($id)
-    {
-        $mkModel = new MataKuliahModel();
+/* ---------- UPDATE ---------- */
+public function updateMatakuliah($id)
+{
+    $mkModel = new MataKuliahModel();
 
-        $data = [
-            'kode'     => $this->request->getPost('kode'),
-            'nama'     => $this->request->getPost('nama'),
-            'sks'      => $this->request->getPost('sks'),
-            'semester' => $this->request->getPost('semester'),
-            'kelas'    => $this->request->getPost('kelas'),
-            'ruang'    => $this->request->getPost('ruang'),
-            'hari'     => $this->request->getPost('hari'),
-            'waktu'    => $this->request->getPost('waktu'),
-            'dosen_id' => $this->request->getPost('dosen_id') ?: session()->get('id'),
-        ];
+    $data = [
+        'kode'         => $this->request->getPost('kode'),
+        'nama'         => $this->request->getPost('nama'),
+        'sks'          => $this->request->getPost('sks'),
+        'semester'     => $this->request->getPost('semester'),
+        'kelas'        => $this->request->getPost('kelas'),
+        'ruang'        => $this->request->getPost('ruang'),
+        'hari'         => $this->request->getPost('hari'),
+        'waktu'        => $this->request->getPost('waktu'),
+        'dosen_id'     => $this->request->getPost('dosen_id') ?: session()->get('id'),
+        'tahun_ajaran' => $this->request->getPost('tahun_ajaran'), // Tambahan
+    ];
 
-        if (!$mkModel->update($id, $data)) {
-            return redirect()->back()
-                ->withInput()
-                ->with('error', 'Gagal memperbarui data.');
-        }
-
-        $redirect = session()->get('role') === 'dosen' ? '/dashboard/dosen' : '/admin/matakuliah';
-        return redirect()->to($redirect)->with('success', 'Data mata kuliah diperbarui.');
+    if (!$mkModel->update($id, $data)) {
+        return redirect()->back()
+            ->withInput()
+            ->with('error', 'Gagal memperbarui data.');
     }
+
+    $redirect = session()->get('role') === 'dosen' ? '/dashboard/dosen' : '/admin/matakuliah';
+    return redirect()->to($redirect)->with('success', 'Data mata kuliah diperbarui.');
+}
+
 
     /* ---------- HAPUS ---------- */
     public function hapusMatakuliah($id)
@@ -250,6 +249,5 @@ public function hapusMahasiswa($id)
 
         return redirect()->to('/admin/matakuliah')->with('success', 'Mata kuliah berhasil dihapus.');
     }
-
 
 }
