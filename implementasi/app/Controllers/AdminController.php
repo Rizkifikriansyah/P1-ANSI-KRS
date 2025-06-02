@@ -14,12 +14,23 @@ class AdminController extends BaseController
     {
         return view('dashboard/admin');
     }
-    public function kelolaMatakuliah()
-    {
-        $model = new MataKuliahModel();
-        $data['matakuliah'] = $model->findAll();
-        return view('admin/matakuliah/index', $data);
+public function kelolaMatakuliah()
+{
+    $db = \Config\Database::connect(); // Tambahkan koneksi DB
+    $keyword = $this->request->getGet('q');
+
+    $query = $db->table('matakuliah');
+
+    if ($keyword) {
+        $query->like('nama', $keyword)->orLike('kode', $keyword);
     }
+
+    $data['matakuliah'] = $query->get()->getResultArray();
+    $data['keyword'] = $keyword; // Untuk tetap menampilkan keyword di form
+
+    return view('admin/matakuliah/index', $data);
+}
+
 
     public function kelolaMahasiswa()
     {

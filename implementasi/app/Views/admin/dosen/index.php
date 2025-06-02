@@ -3,41 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <title>Kelola Dosen</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="<?= base_url('css/style.css?v=1.0.3') ?>">
 </head>
-<body class="bg-light">
-<div class="container py-5">
+<body class="bg-gray-100 min-h-screen">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="fw-bold text-primary">Kelola Dosen</h2>
-        <div>
-            <a href="/dashboard/admin" class="btn btn-outline-secondary me-2">← Kembali</a>
-            <a href="/admin/dosen/tambah" class="btn btn-primary">+ Tambah Dosen</a>
+<div class="container mx-auto px-4 py-10">
+
+    <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
+        <h2 class="text-2xl font-bold text-blue-700">Kelola Dosen</h2>
+        <div class="flex space-x-2">
+            <a href="/dashboard/admin" class="px-4 py-2 text-sm bg-white border border-gray-300 rounded hover:bg-gray-100">← Kembali</a>
+            <a href="/admin/dosen/tambah" class="px-4 py-2 text-sm bg-blue-600 text-white rounded hover:bg-blue-700">+ Tambah Dosen</a>
         </div>
     </div>
 
-    <div class="table-responsive">
-        <table class="table table-hover table-striped align-middle shadow-sm rounded">
-            <thead class="table-primary">
+    <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+        <table class="min-w-full divide-y divide-gray-200 text-sm">
+            <thead class="bg-blue-100 text-left text-gray-700">
                 <tr>
-                    <th>Nama</th>
-                    <th>NIP</th>
-                    <th>Prodi</th>
-                    <th class="text-center">Aksi</th>
+                    <th class="px-4 py-3">Nama</th>
+                    <th class="px-4 py-3">NIP</th>
+                    <th class="px-4 py-3">Prodi</th>
+                    <th class="px-4 py-3 text-center">Aksi</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="divide-y divide-gray-200">
                 <?php foreach ($dosen as $dsn): ?>
-                    <tr>
-                        <td><?= esc($dsn['nama']) ?></td>
-                        <td><?= esc($dsn['nip']) ?></td>
-                        <td><?= esc($dsn['prodi']) ?></td>
-                        <td class="text-center">
-                            <a href="/admin/dosen/edit/<?= $dsn['id'] ?>" class="btn btn-sm btn-warning me-1">
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-4 py-3"><?= esc($dsn['nama']) ?></td>
+                        <td class="px-4 py-3"><?= esc($dsn['nip']) ?></td>
+                        <td class="px-4 py-3"><?= esc($dsn['prodi']) ?></td>
+                        <td class="px-4 py-3 text-center space-x-1">
+                            <a href="/admin/dosen/edit/<?= $dsn['id'] ?>" class="inline-block bg-yellow-400 text-white px-3 py-1 rounded hover:bg-yellow-500 text-xs">
                                 ✏️ Edit
                             </a>
-                            <a href="/admin/dosen/hapus/<?= $dsn['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Yakin ingin menghapus dosen ini?')">
+                            <a href="/admin/dosen/hapus/<?= $dsn['id'] ?>" onclick="return confirm('Yakin ingin menghapus dosen ini?')" class="inline-block bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-xs">
                                 🗑️ Hapus
                             </a>
                         </td>
@@ -45,7 +46,7 @@
                 <?php endforeach; ?>
                 <?php if (empty($dosen)): ?>
                     <tr>
-                        <td colspan="4" class="text-center text-muted">Belum ada data dosen.</td>
+                        <td colspan="4" class="px-4 py-4 text-center text-gray-500 italic">Belum ada data dosen.</td>
                     </tr>
                 <?php endif; ?>
             </tbody>
@@ -53,5 +54,6 @@
     </div>
 
 </div>
+
 </body>
 </html>

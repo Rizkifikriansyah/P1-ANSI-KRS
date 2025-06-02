@@ -1,45 +1,64 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
+    <meta charset="UTF-8">
     <title><?= isset($mahasiswa) ? 'Edit' : 'Tambah' ?> Mahasiswa</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<body class="p-4">
-<div class="container">
-    <h2><?= isset($mahasiswa) ? 'Edit' : 'Tambah' ?> Mahasiswa</h2>
-    
-    <form action="<?= isset($mahasiswa) ? '/admin/mahasiswa/update/' . $mahasiswa['id'] : '/admin/mahasiswa/simpan' ?>" method="post">
-        <div class="mb-3">
-            <label for="nama" class="form-label">Nama</label>
-            <input type="text" name="nama" id="nama" class="form-control" value="<?= isset($mahasiswa) ? esc($mahasiswa['nama']) : '' ?>" required>
+<body class="bg-gray-100 min-h-screen py-6 px-4">
+
+<div class="max-w-xl mx-auto bg-white shadow-md rounded-lg p-6">
+    <h2 class="text-2xl font-bold text-blue-700 mb-6">
+        <?= isset($mahasiswa) ? 'Edit' : 'Tambah' ?> Mahasiswa
+    </h2>
+
+    <form action="<?= isset($mahasiswa) ? '/admin/mahasiswa/update/' . $mahasiswa['id'] : '/admin/mahasiswa/simpan' ?>" method="post" class="space-y-5">
+        <div>
+            <label for="nama" class="block text-sm font-medium text-gray-700 mb-1">Nama</label>
+            <input type="text" name="nama" id="nama" required
+                   value="<?= isset($mahasiswa) ? esc($mahasiswa['nama']) : '' ?>"
+                   class="w-full border border-gray-300 rounded px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none shadow-sm">
         </div>
 
-        <div class="mb-3">
-            <label for="nim" class="form-label">NIM</label>
-            <input type="text" name="nim" id="nim" class="form-control" value="<?= isset($mahasiswa) ? esc($mahasiswa['nim']) : '' ?>" required>
+        <div>
+            <label for="nim" class="block text-sm font-medium text-gray-700 mb-1">NIM</label>
+            <input type="text" name="nim" id="nim" required
+                   value="<?= isset($mahasiswa) ? esc($mahasiswa['nim']) : '' ?>"
+                   class="w-full border border-gray-300 rounded px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none shadow-sm">
         </div>
 
-        <div class="mb-3">
-            <label for="prodi" class="form-label">Prodi</label>
-            <input type="text" name="prodi" id="prodi" class="form-control" value="<?= isset($mahasiswa) ? esc($mahasiswa['prodi']) : '' ?>" required>
+        <div>
+            <label for="prodi" class="block text-sm font-medium text-gray-700 mb-1">Prodi</label>
+            <input type="text" name="prodi" id="prodi" required
+                   value="<?= isset($mahasiswa) ? esc($mahasiswa['prodi']) : '' ?>"
+                   class="w-full border border-gray-300 rounded px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none shadow-sm">
         </div>
 
-        <?php if (!isset($mahasiswa)): ?>
-        <!-- Form hanya ditampilkan saat tambah -->
-        <div class="mb-3">
-            <label for="username" class="form-label">Username</label>
-            <input type="text" name="username" id="username" class="form-control" required>
+        <?php if (!isset($mahasiswa)) : ?>
+        <div>
+            <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+            <input type="text" name="username" id="username" required
+                   class="w-full border border-gray-300 rounded px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none shadow-sm">
         </div>
 
-        <div class="mb-3">
-            <label for="password" class="form-label">Password</label>
-            <input type="password" name="password" id="password" class="form-control" required>
+        <div>
+            <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <input type="password" name="password" id="password" required
+                   class="w-full border border-gray-300 rounded px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none shadow-sm">
         </div>
         <?php endif; ?>
 
-        <button type="submit" class="btn btn-success">Simpan</button>
-        <a href="/admin/mahasiswa" class="btn btn-secondary">Batal</a>
+        <div class="flex items-center justify-between">
+            <button type="submit"
+                    class="bg-green-600 hover:bg-green-700 text-white font-semibold px-5 py-2 rounded shadow transition">
+                Simpan
+            </button>
+            <a href="/admin/mahasiswa"
+               class="text-gray-600 hover:text-gray-800 underline text-sm">Batal</a>
+        </div>
     </form>
 </div>
+
 </body>
 </html>

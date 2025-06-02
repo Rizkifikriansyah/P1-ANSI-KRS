@@ -1,83 +1,65 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <title>Dashboard Admin</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="<?= base_url('css/style.css?v=1.0.5') ?>">
+  <meta charset="UTF-8">
+  <title>Dashboard Admin</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#2563eb',
+          }
+        }
+      }
+    }
+  </script>
 </head>
-<body class="bg-light">
+<body class="bg-gray-100 min-h-screen">
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm mb-4">
-    <div class="container-fluid">
-        <a class="navbar-brand fw-bold" href="#">Sistem KRS</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarAdmin" aria-controls="navbarAdmin" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-      
-        <div class="collapse navbar-collapse" id="navbarAdmin">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link" href="/admin/matakuliah">📘 Kelola Mata Kuliah</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/admin/mahasiswa">🎓 Kelola Mahasiswa</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/admin/dosen">👨‍🏫 Kelola Dosen</a>
-                </li>
-            </ul>
-            <span class="navbar-text text-white me-3">
-                👤 <?= esc(session()->get('name')) ?> (Admin)
-            </span>
-            <a href="/logout" class="btn btn-outline-light btn-sm">Logout</a>
+<!-- Navbar -->
+<nav class="bg-primary text-white shadow">
+  <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+    <div class="flex items-center space-x-3">
+            <img src="<?= base_url('image/umb.jpeg') ?>" alt="Logo Kampus" class="w-8 h-8 rounded-full">
+            <a href="/" class="text-lg font-semibold hover:text-yellow-300">Universitas Muhammadiyah Bima</a>
         </div>
+    <div class="flex items-center gap-3">
+      <span class="text-sm hidden sm:inline">👤 <?= esc(session()->get('name')) ?> (Admin)</span>
+      <a href="/logout" class="bg-white text-primary px-3 py-1 rounded text-sm hover:bg-gray-100">Logout</a>
     </div>
+  </div>
 </nav>
 
-<div class="container py-4">
-    <div class="bg-white rounded shadow p-4">
-        <h2 class="fw-bold text-primary mb-3">Dashboard Admin</h2>
-        <p class="lead">Selamat datang, <strong><?= esc(session()->get('name')) ?></strong>!</p>
-        <p>Gunakan menu di atas untuk mengelola data akademik seperti mahasiswa, dosen, dan mata kuliah.</p>
+<!-- Content -->
+<div class="max-w-6xl mx-auto px-4 py-10">
+  <div class="bg-white shadow rounded-lg p-6">
+    <h2 class="text-2xl font-bold text-primary mb-2">Dashboard Admin</h2>
+    <p class="text-gray-700">Selamat datang, <strong><?= esc(session()->get('name')) ?></strong>!</p>
+    <p class="text-sm text-gray-500">Gunakan menu di atas untuk mengelola data akademik seperti mahasiswa, dosen, dan mata kuliah.</p>
 
-        <hr>
+    <hr class="my-6">
 
-        <div class="row text-center mt-4">
-            <div class="col-md-4 mb-3">
-                <a href="/admin/mahasiswa" class="text-decoration-none">
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-body">
-                            <h5 class="card-title">🎓 Mahasiswa</h5>
-                            <p class="card-text">Lihat dan kelola data mahasiswa.</p>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="col-md-4 mb-3">
-                <a href="/admin/dosen" class="text-decoration-none">
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-body">
-                            <h5 class="card-title">👨‍🏫 Dosen</h5>
-                            <p class="card-text">Kelola informasi dosen.</p>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="col-md-4 mb-3">
-                <a href="/admin/matakuliah" class="text-decoration-none">
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-body">
-                            <h5 class="card-title">📘 Mata Kuliah</h5>
-                            <p class="card-text">Atur data mata kuliah dan jadwal.</p>
-                        </div>
-                    </div>
-                </a>
-            </div>
-        </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
+      <a href="/admin/mahasiswa" class="bg-gray-50 hover:bg-gray-100 rounded-lg shadow p-6 transition">
+        <h3 class="text-xl font-semibold text-blue-700 mb-1">🎓 Mahasiswa</h3>
+        <p class="text-sm text-gray-600">Lihat dan kelola data mahasiswa.</p>
+      </a>
+
+      <a href="/admin/dosen" class="bg-gray-50 hover:bg-gray-100 rounded-lg shadow p-6 transition">
+        <h3 class="text-xl font-semibold text-blue-700 mb-1">👨‍🏫 Dosen</h3>
+        <p class="text-sm text-gray-600">Kelola informasi dosen.</p>
+      </a>
+
+      <a href="/admin/matakuliah" class="bg-gray-50 hover:bg-gray-100 rounded-lg shadow p-6 transition">
+        <h3 class="text-xl font-semibold text-blue-700 mb-1">📘 Mata Kuliah</h3>
+        <p class="text-sm text-gray-600">Atur data mata kuliah dan jadwal.</p>
+      </a>
     </div>
+  </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
