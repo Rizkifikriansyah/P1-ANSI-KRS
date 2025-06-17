@@ -69,20 +69,28 @@ public function mahasiswa()
 
 public function dosen()
 {
+    // Ambil ID dosen dari session (pastikan sudah diset saat login)
     $dosenId = session()->get('dosen_id');
 
     if (!$dosenId) {
         return redirect()->to('/login')->with('error', 'Silakan login terlebih dahulu.');
     }
 
-    $mkModel    = new \App\Models\MataKuliahModel();
+    $db         = \Config\Database::connect();
     $krsModel   = new \App\Models\KrsModel();
     $mhsModel   = new \App\Models\MahasiswaModel();
 
-    $mataKuliahList = $mkModel->where('dosen_id', $dosenId)->findAll();
+    // Ambil semua jadwal yang diampu oleh dosen ini
+$jadwalList = $db->table('jadwal')
+    ->select('jadwal.*, matakuliah.nama AS nama_matakuliah, matakuliah.kode AS kode_matakuliah, matakuliah.semester')
+    ->join('matakuliah', 'matakuliah.id = jadwal.matakuliah_id')
+    ->where('jadwal.dosen_id', $dosenId)
+    ->get()->getResultArray();
 
-    foreach ($mataKuliahList as &$mk) {
-        $krsList = $krsModel->where('matakuliah_id', $mk['id'])->findAll();
+
+    // Untuk setiap jadwal, ambil daftar mahasiswa
+    foreach ($jadwalList as &$jadwal) {
+        $krsList = $krsModel->where('jadwal_id', $jadwal['id'])->findAll();
 
         $mahasiswaList = [];
 
@@ -90,22 +98,24 @@ public function dosen()
             $mhs = $mhsModel->find($krs['mahasiswa_id']);
             if ($mhs) {
                 $mahasiswaList[] = [
-                    'nama' => $mhs['nama'],
-                    'nim' => $mhs['nim'],
-                    'prodi' => $mhs['prodi'],
-                    'krs_id' => $krs['id'],
-                    'is_approved' => $krs['is_approved']
+                    'nama'        => $mhs['nama'],
+                    'nim'         => $mhs['nim'],
+                    'prodi'       => $mhs['prodi'],
+                    'krs_id'      => $krs['id'],
+                    'is_approved' => $krs['is_approved'],
                 ];
             }
         }
 
-        $mk['mahasiswa'] = $mahasiswaList;
+        $jadwal['mahasiswa'] = $mahasiswaList;
     }
 
     return view('dashboard/dosen', [
-        'matakuliah' => $mataKuliahList
+        'jadwalList' => $jadwalList,
     ]);
 }
+
+
 
 
 

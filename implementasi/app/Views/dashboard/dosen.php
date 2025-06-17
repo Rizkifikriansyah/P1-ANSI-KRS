@@ -28,11 +28,11 @@
     </div>
     <p class="text-gray-600 mb-6">Berikut adalah daftar mata kuliah yang Anda ampu, beserta mahasiswa yang mengambilnya.</p>
 
-    <?php if (!empty($matakuliah)): ?>
-        <?php foreach ($matakuliah as $mk): ?>
+<?php if (!empty($jadwalList)): ?>
+    <?php foreach ($jadwalList as $mk): ?>
             <div class="bg-white shadow rounded mb-8 overflow-hidden">
                 <div class="bg-blue-500 text-white px-6 py-4">
-                    <h5 class="font-bold text-lg"><?= esc($mk['nama']) ?> (<?= esc($mk['kode']) ?>)</h5>
+                    <h5 class="font-bold text-lg"><?= esc($mk['nama_matakuliah']) ?> (<?= esc($mk['kode_matakuliah']) ?>)</h5>
                     <p class="text-sm">Semester: <?= esc($mk['semester']) ?> | Kelas: <?= esc($mk['kelas']) ?> | Ruang: <?= esc($mk['ruang']) ?></p>
                     <p class="text-sm">Hari: <?= esc($mk['hari']) ?> | Jam: <?= esc($mk['waktu']) ?></p>
                 </div>

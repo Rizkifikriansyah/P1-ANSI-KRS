@@ -9,8 +9,19 @@ class MahasiswaModel extends Model
     protected $table      = 'mahasiswa';         // Nama tabel di database
     protected $primaryKey = 'id';                // Primary key tabel
 
-    protected $allowedFields = ['nama', 'nim', 'prodi', 'user_id']; // Kolom yang bisa diisi
+    // Kolom-kolom yang bisa diisi melalui input/form
+    protected $allowedFields = [
+        'nama',
+        'nim',
+        'prodi',
+        'angkatan',
+        'nomor_hp',
+        'alamat',
+        'user_id'
+    ];
 
-    protected $useTimestamps = false;            // Ubah ke true jika pakai created_at & updated_at
-    protected $useSoftDeletes = false;           // Ubah ke true jika pakai soft delete
+protected $useTimestamps = true;
+protected $createdField  = 'created_at';
+protected $updatedField  = 'updated_at';
+
 }

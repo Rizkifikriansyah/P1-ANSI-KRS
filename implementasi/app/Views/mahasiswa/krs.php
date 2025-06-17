@@ -42,14 +42,15 @@
                         <?php foreach ($matakuliah_paginated as $mk): ?>
                             <tr class="hover:bg-gray-50">
                                 <td class="text-center border p-2">
-                                    <input type="checkbox" name="matakuliah_id[]" value="<?= $mk['id'] ?>"
-                                        <?= in_array($mk['id'], $krs_matakuliah_ids ?? []) ? 'checked' : '' ?>>
+                                  <input type="checkbox" name="jadwal_id[]" value="<?= $mk['jadwal_id'] ?>"
+                                        <?= in_array($mk['jadwal_id'], $krs_jadwal_ids ?? []) ? 'checked' : '' ?>>
+
                                 </td>
                                 <td class="border p-2"><?= esc($mk['kode']) ?></td>
                                 <td class="border p-2"><?= esc($mk['nama']) ?></td>
                                 <td class="border p-2"><?= esc($mk['sks']) ?></td>
                                 <td class="border p-2"><?= esc($mk['kelas'] ?? '-') ?></td>
-                                <td class="border p-2 capitalize"><?= esc($mk['semester']) ?></td>
+                                <td class="border p-2 capitalize"><?= esc($mk['semester'] ?? '-') ?></td>
                                 <td class="border p-2"><?= esc($mk['tahun_ajaran'] ?? '-') ?></td>
                             </tr>
                         <?php endforeach; ?>

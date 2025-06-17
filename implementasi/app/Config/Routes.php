@@ -27,39 +27,50 @@ $routes->post('/krs/hapus/(:num)', 'Krs::hapus/$1');
 $routes->get('/dashboard/tambah-matakuliah', 'Dashboard::tambahMatakuliah');
 $routes->post('/dashboard/simpan-matakuliah', 'Dashboard::simpanMatakuliah');
 
-$routes->get('/dashboard/admin', 'AdminController::index');
+// Dashboard admin
+$routes->get('/dashboard/admin', 'AdminController::index', ['filter' => 'admin']);
 
-$routes->get('/admin/matakuliah', 'AdminController::kelolaMatakuliah');
-$routes->get('/admin/mahasiswa', 'AdminController::kelolaMahasiswa');
-$routes->get('/admin/dosen', 'AdminController::kelolaDosen');
+$routes->group('admin', ['filter' => 'admin'], function($routes) {
 
-// Mahasiswa
-$routes->get('/admin/mahasiswa/tambah', 'AdminController::formMahasiswa');
-$routes->get('/admin/mahasiswa/form', 'AdminController::formMahasiswa');
-$routes->get('/admin/mahasiswa/edit/(:num)', 'AdminController::formMahasiswa/$1');
-$routes->post('/admin/mahasiswa/simpan', 'AdminController::simpanMahasiswa');
-$routes->post('/admin/mahasiswa/update/(:num)', 'AdminController::updateMahasiswa/$1');
-$routes->get('/admin/mahasiswa/hapus/(:num)', 'AdminController::hapusMahasiswa/$1');
+    // =================== JADWAL ===================
+    $routes->get('jadwal', 'AdminController::kelolaJadwal');
+    $routes->get('jadwal/tambah', 'AdminController::formJadwal'); // bisa juga pakai 'form'
+    $routes->get('jadwal/form', 'AdminController::formJadwal');
+    $routes->get('jadwal/edit/(:num)', 'AdminController::formJadwal/$1');
+    $routes->post('jadwal/simpan', 'AdminController::simpanJadwal');
+    $routes->post('jadwal/update/(:num)', 'AdminController::updateJadwal/$1');
+    $routes->get('jadwal/hapus/(:num)', 'AdminController::hapusJadwal/$1');
 
-// Dosen
-$routes->get('/admin/dosen/tambah', 'AdminController::formDosen');
-$routes->get('/admin/dosen/form', 'AdminController::formDosen');
-$routes->get('/admin/dosen/edit/(:num)', 'AdminController::formDosen/$1');
-$routes->post('/admin/dosen/simpan', 'AdminController::simpanDosen');
-$routes->post('/admin/dosen/update/(:num)', 'AdminController::updateDosen/$1');
-$routes->get('/admin/dosen/hapus/(:num)', 'AdminController::hapusDosen/$1');
+    // =================== MATAKULIAH ===================
+    $routes->get('matakuliah', 'AdminController::kelolaMatakuliah');
+    $routes->get('matakuliah/tambah', 'AdminController::formMatakuliah');
+    $routes->get('matakuliah/form', 'AdminController::formMatakuliah');
+    $routes->get('matakuliah/edit/(:num)', 'AdminController::formMatakuliah/$1');
+    $routes->post('matakuliah/simpan', 'AdminController::simpanMatakuliah');
+    $routes->post('matakuliah/update/(:num)', 'AdminController::updateMatakuliah/$1');
+    $routes->get('matakuliah/hapus/(:num)', 'AdminController::hapusMatakuliah/$1');
 
-// Matakuliah
-$routes->get('/admin/matakuliah/tambah', 'AdminController::formMatakuliah');
-$routes->get('/admin/matakuliah/form', 'AdminController::formMatakuliah');
-$routes->get('/admin/matakuliah/edit/(:num)', 'AdminController::formMatakuliah/$1');
-$routes->post('/admin/matakuliah/simpan', 'AdminController::simpanMatakuliah');
-$routes->post('/admin/matakuliah/update/(:num)', 'AdminController::updateMatakuliah/$1');
-$routes->get('/admin/matakuliah/hapus/(:num)', 'AdminController::hapusMatakuliah/$1');
+    // =================== MAHASISWA ===================
+    $routes->get('mahasiswa', 'AdminController::kelolaMahasiswa');
+    $routes->get('mahasiswa/tambah', 'AdminController::formMahasiswa');
+    $routes->get('mahasiswa/form', 'AdminController::formMahasiswa');
+    $routes->get('mahasiswa/edit/(:num)', 'AdminController::formMahasiswa/$1');
+    $routes->post('mahasiswa/simpan', 'AdminController::simpanMahasiswa');
+    $routes->post('mahasiswa/update/(:num)', 'AdminController::updateMahasiswa/$1');
+    $routes->get('mahasiswa/hapus/(:num)', 'AdminController::hapusMahasiswa/$1');
+
+    // =================== DOSEN ===================
+    $routes->get('dosen', 'AdminController::kelolaDosen');
+    $routes->get('dosen/tambah', 'AdminController::formDosen');
+    $routes->get('dosen/form', 'AdminController::formDosen');
+    $routes->get('dosen/edit/(:num)', 'AdminController::formDosen/$1');
+    $routes->post('dosen/simpan', 'AdminController::simpanDosen');
+    $routes->post('dosen/update/(:num)', 'AdminController::updateDosen/$1');
+    $routes->get('dosen/hapus/(:num)', 'AdminController::hapusDosen/$1');
+
+});
 
 
-$routes->post('/admin/simpan-mahasiswa', 'AdminController::simpanMahasiswa');
-$routes->post('/admin/simpan-dosen', 'AdminController::simpanDosen');
 // Mahasiswa
 $routes->get('/dashboard/mahasiswa', 'Dashboard::mahasiswa');
 

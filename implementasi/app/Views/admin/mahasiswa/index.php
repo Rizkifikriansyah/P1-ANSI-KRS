@@ -8,7 +8,7 @@
 </head>
 <body class="bg-gray-100 min-h-screen text-gray-800">
 
-<div class="max-w-6xl mx-auto px-4 py-8">
+<div class="max-w-7xl mx-auto px-4 py-8">
     <div class="flex flex-col sm:flex-row justify-between items-center mb-6">
         <h2 class="text-2xl font-bold text-blue-700">Kelola Mahasiswa</h2>
         <div class="mt-4 sm:mt-0 flex gap-2">
@@ -28,6 +28,9 @@
                     <th class="text-left px-4 py-3">Nama</th>
                     <th class="text-left px-4 py-3">NIM</th>
                     <th class="text-left px-4 py-3">Prodi</th>
+                    <th class="text-left px-4 py-3">Angkatan</th>
+                    <th class="text-left px-4 py-3">No. HP</th>
+                    <th class="text-left px-4 py-3">Alamat</th>
                     <th class="text-center px-4 py-3">Aksi</th>
                 </tr>
             </thead>
@@ -37,7 +40,10 @@
                     <td class="px-4 py-3"><?= esc($mhs['nama']) ?></td>
                     <td class="px-4 py-3"><?= esc($mhs['nim']) ?></td>
                     <td class="px-4 py-3"><?= esc($mhs['prodi']) ?></td>
-                    <td class="px-4 py-3 text-center">
+                    <td class="px-4 py-3"><?= esc($mhs['angkatan']) ?></td>
+                    <td class="px-4 py-3"><?= esc($mhs['nomor_hp']) ?></td>
+                    <td class="px-4 py-3"><?= esc($mhs['alamat']) ?></td>
+                    <td class="px-4 py-3 text-center whitespace-nowrap">
                         <a href="/admin/mahasiswa/edit/<?= $mhs['id'] ?>"
                            class="inline-block bg-yellow-400 text-white px-3 py-1 rounded text-xs hover:bg-yellow-500 transition">
                             ✏️ Edit
@@ -50,10 +56,10 @@
                     </td>
                 </tr>
                 <?php endforeach; ?>
-                
+
                 <?php if (empty($mahasiswa)) : ?>
                 <tr>
-                    <td colspan="4" class="text-center px-4 py-6 text-gray-500 italic">
+                    <td colspan="7" class="text-center px-4 py-6 text-gray-500 italic">
                         Tidak ada data mahasiswa.
                     </td>
                 </tr>
